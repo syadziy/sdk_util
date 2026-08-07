@@ -9,3 +9,4 @@ com.mac.sdk_util.config.securities.MethodSecurityAutoConfiguration
 com.mac.sdk_util.config.securities.CorsAutoConfiguration
 com.mac.sdk_util.config.openapi.OpenApiAutoConfiguration
 com.mac.sdk_util.config.openapi.OpenApiUnprefixedRedirectAutoConfiguration
+com.mac.sdk_util.config.web.WebExceptionHandlerAutoConfiguration
