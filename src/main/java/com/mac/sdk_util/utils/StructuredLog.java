@@ -1,6 +1,7 @@
 package com.mac.sdk_util.utils;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.MDC;
@@ -32,13 +33,25 @@ public final class StructuredLog {
     }
 
     public static void withMdc(Map<String, String> fields, Runnable action) {
+        Map<String, String> previousContext = MDC.getCopyOfContextMap();
         Map<String, String> safeFields = fields == null ? Collections.emptyMap() : fields;
-        safeFields.forEach(MDC::put);
         try {
+            MDC.clear();
+            if (!safeFields.isEmpty()) {
+                MDC.setContextMap(safeFields);
+            }
             action.run();
         } finally {
-            safeFields.keySet().forEach(MDC::remove);
+            MDC.clear();
+            if (previousContext != null && !previousContext.isEmpty()) {
+                MDC.setContextMap(previousContext);
+            }
         }
+    }
+
+    public static Map<String, String> copyMdc() {
+        Map<String, String> context = MDC.getCopyOfContextMap();
+        return context == null ? new HashMap<>() : new HashMap<>(context);
     }
 
     public static void putMdc(Map<String, String> fields) {
