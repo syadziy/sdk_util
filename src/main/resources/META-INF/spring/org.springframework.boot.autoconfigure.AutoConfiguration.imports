@@ -1,0 +1,11 @@
+com.mac.sdk_util.config.timezone.TimezoneAutoConfiguration
+com.mac.sdk_util.config.logging.ServiceLoggingAutoConfiguration
+com.mac.sdk_util.config.logging.StructuredLoggingAutoConfiguration
+com.mac.sdk_util.config.securities.JwtDecoderAutoConfiguration
+com.mac.sdk_util.config.securities.OAuth2JwtBeansAutoConfiguration
+com.mac.sdk_util.config.securities.WebSecurityPublicPathsCustomizerAutoConfiguration
+com.mac.sdk_util.config.securities.WebSecurityAutoConfiguration
+com.mac.sdk_util.config.securities.MethodSecurityAutoConfiguration
+com.mac.sdk_util.config.securities.CorsAutoConfiguration
+com.mac.sdk_util.config.openapi.OpenApiAutoConfiguration
+com.mac.sdk_util.config.openapi.OpenApiUnprefixedRedirectAutoConfiguration
