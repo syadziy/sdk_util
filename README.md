@@ -613,8 +613,13 @@ Class ini hanya menyediakan constant; SDK tidak membangun SQL atau melakukan san
 
 ```bash
 mvn test
+mvn clean verify
 mvn clean install
 ```
+
+`mvn clean verify` membuat laporan JaCoCo di `target/site/jacoco/index.html` dan menggagalkan build
+bila line coverage production behavior kurang dari 90%. DTO, enum, generated code, dan property
+holder yang hanya menyimpan konfigurasi tidak dimasukkan dalam gate tersebut.
 
 Jalankan `mvn clean install` sebelum menguji service consumer lokal agar Maven menggunakan artifact
 SDK terbaru, bukan versi lama yang sudah tersimpan pada local repository.

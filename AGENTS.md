@@ -272,6 +272,14 @@ by consumer DTOs.
 
 Every behavior or default change must include focused tests.
 
+The minimum JaCoCo line coverage for production behavior is 90%. `mvn clean verify` must enforce
+this threshold; coverage must be measured rather than estimated. The scope includes public helpers,
+servlet filters, exception handlers, JWT/security behavior, conditions, environment processors,
+logging advice, and auto-configuration bean logic. DTOs, enums, generated code, and trivial property
+holders may be excluded only when the exclusion is explicit and justifiable. New or changed
+production behavior must independently maintain at least 90% line coverage with meaningful
+assertions; executing lines without verifying outcomes does not satisfy this standard.
+
 - Unit-test all public helper status/body/header mappings.
 - Test auto-configuration with Spring Boot context runners.
 - For each conditional configuration, test enabled/default, disabled, and consumer override cases.

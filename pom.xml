@@ -61,6 +61,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
         </dependency>
@@ -81,10 +86,71 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
+        <jacoco.version>0.8.15</jacoco.version>
+        <jacoco.minimum.line.coverage>0.90</jacoco.minimum.line.coverage>
     </properties>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <configuration>
+                    <includes>
+                        <include>com/mac/sdk_util/config/logging/**</include>
+                        <include>com/mac/sdk_util/config/openapi/**</include>
+                        <include>com/mac/sdk_util/config/securities/**</include>
+                        <include>com/mac/sdk_util/config/timezone/**</include>
+                        <include>com/mac/sdk_util/config/web/**</include>
+                        <include>com/mac/sdk_util/openapi/**</include>
+                        <include>com/mac/sdk_util/securities/**</include>
+                        <include>com/mac/sdk_util/utils/**</include>
+                        <include>com/mac/sdk_util/web/**</include>
+                    </includes>
+                    <excludes>
+                        <exclude>com/mac/sdk_util/config/logging/properties/**</exclude>
+                        <exclude>com/mac/sdk_util/config/openapi/properties/**</exclude>
+                        <exclude>com/mac/sdk_util/config/securities/properties/JwtAuthConverterProperties*</exclude>
+                        <exclude>com/mac/sdk_util/config/timezone/properties/**</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-report</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-check</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <rule>
+                                    <element>BUNDLE</element>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>${jacoco.minimum.line.coverage}</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
