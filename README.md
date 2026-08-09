@@ -94,7 +94,7 @@ sdk:
   security:
     enabled: true
     csrf-disabled: true
-    jwt-issuer-uri: https://identity.example.com/realms/platform
+    jwt-issuer-uri: http://localhost:9005
     session-creation-policy: STATELESS
     path-prefix: /orders
     permit-all-paths:
@@ -357,7 +357,7 @@ Issuer dapat memakai salah satu property berikut. Property SDK memiliki priorita
 ```yaml
 sdk:
   security:
-    jwt-issuer-uri: https://identity.example.com/realms/platform
+    jwt-issuer-uri: http://localhost:9005
 ```
 
 atau:
@@ -368,7 +368,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: https://identity.example.com/realms/platform
+          issuer-uri: http://localhost:9005
 ```
 
 Tanpa issuer, SDK tidak membuat `JwtDecoder` dan konfigurasi resource server JWT tidak dipasang.
@@ -379,13 +379,40 @@ Security chain tetap mengharuskan authentication kecuali service melakukan custo
 `JwtAuthConverter` menggabungkan:
 
 - Scope authorities standar Spring Security.
+- Roles top-level `roles` dari `usermanagement` menjadi `ROLE_*`.
+- Permissions top-level `permissions` dari `usermanagement` menjadi `PERM_*`.
 - Roles dari `realm_access.roles`.
 - Roles dari `resource_access.{resource-id}.roles`.
+
+Konfigurasi consumer `usermanagement`:
+
+```yaml
+sdk:
+  security:
+    jwt-issuer-uri: http://localhost:9005
+jwt:
+  auth:
+    converter:
+      principle-attribute: username
+```
+
+Issuer harus menyediakan discovery metadata dan `jwks_uri`. `usermanagement` menyediakan
+`/.well-known/openid-configuration` dan `/oauth2/jwks`; private signing key tidak pernah dibagikan
+ke consumer.
 
 Role otomatis mendapat prefix `ROLE_`, sehingga dapat digunakan dengan `hasRole(...)`:
 
 ```java
-@PreAuthorize("hasRole('orders:write')")
+@PreAuthorize("hasRole('TENANT_OWNER')")
+public void createOrder() {
+    // ...
+}
+```
+
+Permission otomatis mendapat prefix `PERM_` dan tetap mempertahankan separator titik dua:
+
+```java
+@PreAuthorize("hasAuthority('PERM_orders:create')")
 public void createOrder() {
     // ...
 }

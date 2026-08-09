@@ -30,10 +30,13 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
             new JwtGrantedAuthoritiesConverter();
 
     public Collection<GrantedAuthority> extractAuthorities(@NonNull Jwt jwt) {
-        Collection<? extends GrantedAuthority> realmAndClientRoles = extractResourceRoles(jwt);
-        return Stream.concat(
+        Collection<? extends GrantedAuthority> roles = extractRoles(jwt);
+        Collection<? extends GrantedAuthority> permissions = extractPermissions(jwt);
+        return Stream.of(
                         jwtGrantedAuthoritiesConverter.convert(jwt).stream(),
-                        realmAndClientRoles.stream())
+                        roles.stream(),
+                        permissions.stream())
+                .flatMap(stream -> stream)
                 .collect(Collectors.toSet());
     }
 
@@ -44,9 +47,7 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
         Collection<GrantedAuthority> authorities = extractAuthorities(jwt);
 
         if (log.isDebugEnabled()) {
-            log.debug(
-                    "JWT authorities: {}",
-                    authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(", ")));
+            log.debug("JWT authority mapping completed: {} authorities", authorities.size());
         }
 
         return new JwtAuthenticationToken(jwt, authorities, getPrincipleClaimName(jwt));
@@ -54,13 +55,6 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
 
     public String getToken(Jwt jwt) {
         return jwt.getTokenValue();
-    }
-
-    private static SimpleGrantedAuthority toSpringRoleAuthority(String role) {
-        if (role.startsWith("ROLE_")) {
-            return new SimpleGrantedAuthority(role);
-        }
-        return new SimpleGrantedAuthority("ROLE_" + role);
     }
 
     private String getPrincipleClaimName(Jwt jwt) {
@@ -72,13 +66,21 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
         return jwt.getClaim(claimName);
     }
 
-    private Collection<? extends GrantedAuthority> extractResourceRoles(Jwt source) {
+    private Collection<? extends GrantedAuthority> extractRoles(Jwt source) {
+        Set<SimpleGrantedAuthority> direct = mapRolesCollection(source.getClaim(JwtPayload.ROLES.getClaimKey()));
         Set<SimpleGrantedAuthority> realm = mapRolesFromNestedClaim(source, JwtPayload.REALM_ACCESS.getClaimKey());
         Set<SimpleGrantedAuthority> client =
                 StringUtils.hasText(properties.getResourceId())
                         ? mapRolesFromResourceClient(source, properties.getResourceId().trim())
                         : Set.of();
-        return Stream.concat(realm.stream(), client.stream()).collect(Collectors.toSet());
+        return Stream.of(direct.stream(), realm.stream(), client.stream())
+                .flatMap(stream -> stream)
+                .collect(Collectors.toSet());
+    }
+
+    private static Collection<? extends GrantedAuthority> extractPermissions(Jwt source) {
+        return mapAuthoritiesCollection(
+                source.getClaim(JwtPayload.PERMISSIONS.getClaimKey()), "PERM_");
     }
 
     private static Set<SimpleGrantedAuthority> mapRolesFromResourceClient(Jwt source, String clientId) {
@@ -108,15 +110,21 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
     }
 
     private static Set<SimpleGrantedAuthority> mapRolesCollection(Object rolesObj) {
-        if (!(rolesObj instanceof Collection<?> roles)) {
+        return mapAuthoritiesCollection(rolesObj, "ROLE_");
+    }
+
+    private static Set<SimpleGrantedAuthority> mapAuthoritiesCollection(Object valuesObject, String prefix) {
+        if (!(valuesObject instanceof Collection<?> values)) {
             return Set.of();
         }
-        return roles.stream()
+        return values.stream()
                 .filter(Objects::nonNull)
                 .map(Object::toString)
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
-                .map(JwtAuthConverter::toSpringRoleAuthority)
+                .map(value -> value.startsWith(prefix)
+                        ? new SimpleGrantedAuthority(value)
+                        : new SimpleGrantedAuthority(prefix + value))
                 .collect(Collectors.toSet());
     }
 }

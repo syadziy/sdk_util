@@ -20,6 +20,8 @@ public enum JwtPayload {
     GROUPS("groups"),
     EMAIL("email"),
     ROLES("roles"),
+    PERMISSIONS("permissions"),
+    USERNAME("username"),
     GIVEN_NAME("given_name"),
     FAMILY_NAME("family_name"),
     SESSION_STATE("session_state"),

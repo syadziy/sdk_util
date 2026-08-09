@@ -15,7 +15,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 class SecurityContractsTest {
 
     @Test
-    void jwtConverterCombinesScopesRealmAndClientRoles() {
+    void jwtConverterCombinesUserManagementScopesRolesPermissionsAndLegacyRoles() {
         JwtAuthConverterProperties properties = new JwtAuthConverterProperties();
         properties.setPrincipleAttribute("preferred_username");
         properties.setResourceId(" api ");
@@ -23,12 +23,15 @@ class SecurityContractsTest {
         Jwt jwt = jwt(Map.of(
                 "preferred_username", "ada",
                 "scope", "read write",
+                "roles", List.of("tenant_owner", "ROLE_operator"),
+                "permissions", List.of("audit:view", "PERM_alert:create"),
                 "realm_access", Map.of("roles", List.of("admin", "ROLE_user", " ", 7)),
                 "resource_access", Map.of("api", Map.of("roles", Arrays.asList("client", null)))));
         Set<String> authorities = converter.extractAuthorities(jwt).stream()
                 .map(GrantedAuthority::getAuthority).collect(java.util.stream.Collectors.toSet());
         assertTrue(authorities.containsAll(Set.of("SCOPE_read", "SCOPE_write", "ROLE_admin",
-                "ROLE_user", "ROLE_7", "ROLE_client")));
+                "ROLE_user", "ROLE_7", "ROLE_client", "ROLE_tenant_owner", "ROLE_operator",
+                "PERM_audit:view", "PERM_alert:create")));
         JwtAuthenticationToken token = (JwtAuthenticationToken) converter.convert(jwt);
         assertEquals("ada", token.getName());
         assertEquals("token", converter.getToken(jwt));
