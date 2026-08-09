@@ -55,9 +55,10 @@ src/main/java/com/mac/sdk_util/
 │   ├── constant/           # Status, JWT, logging, role, and table constants
 │   └── dto/                # Shared response and paging DTOs
 ├── exception/              # Shared exceptions safe for consumers
+├── helper/                 # Standard REST response and paging helpers
 ├── openapi/                # OpenAPI conditions, constants, environment setup
 ├── securities/             # JWT converter, response writer, customization SPI
-├── utils/                  # Response, logging, date, string, and query helpers
+├── utils/                  # Logging, MDC, date, string, and query utilities
 └── web/                    # Shared ControllerAdvice implementation
 
 src/main/resources/META-INF/spring/
@@ -118,6 +119,8 @@ Preferred:
 - Records for new immutable DTOs when Jackson/Spring compatibility is verified.
 - Switch expressions and pattern matching for clearer closed-type logic.
 - Small final utility classes with private constructors.
+- Place REST response construction in `helper`; reserve `utils` for generic logging, MDC, date,
+  string, and query utilities.
 - Immutable return values where changing mutability would not break compatibility.
 - Spring `ObjectProvider` for optional consumer-provided beans.
 
@@ -142,6 +145,7 @@ Avoid:
 - Configuration binding: suffix `Properties`.
 - Spring conditions: prefix `On` and suffix `Condition`.
 - Shared exceptions: suffix `Exception`.
+- REST response builders: suffix `Helper` and keep them under the `helper` source group.
 - Request/response DTOs: suffix `Request` or `Response` when applicable.
 
 Property prefixes must stay within an established namespace such as `sdk.logging.*`,

@@ -1,4 +1,4 @@
-package com.mac.sdk_util.utils;
+package com.mac.sdk_util.helper;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;

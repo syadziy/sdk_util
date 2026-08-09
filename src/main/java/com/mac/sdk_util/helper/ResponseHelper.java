@@ -1,4 +1,4 @@
-package com.mac.sdk_util.utils;
+package com.mac.sdk_util.helper;
 
 import java.net.URI;
 import java.util.List;

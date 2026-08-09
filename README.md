@@ -65,6 +65,23 @@ Semua auto-configuration didaftarkan melalui
 `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports`; consumer tidak
 perlu menambahkan `@ComponentScan` untuk package `com.mac.sdk_util`.
 
+## Package structure
+
+```text
+com/mac/sdk_util/
+├── config/       # Spring Boot auto-configuration dan properties
+├── entities/     # Shared constants, response DTO, dan paging DTO
+├── exception/    # Shared exceptions
+├── helper/       # ResponseHelper dan ResponsePagingHelper
+├── openapi/      # OpenAPI conditions dan environment defaults
+├── securities/   # JWT converter, servlet responses, dan security customization SPI
+├── utils/        # Structured logging, MDC, date, string, dan query utilities
+└── web/          # GlobalExceptionHandler
+```
+
+`helper` digunakan khusus untuk membangun standard REST response dan paging response. Utility umum
+yang tidak membentuk response tetap berada di `utils`.
+
 ## Quick start configuration
 
 Contoh konfigurasi service yang menggunakan fitur utama:
@@ -141,6 +158,9 @@ jwt:
 service consumer.
 
 ### ResponseHelper
+
+Source helper ini dikelompokkan dalam direktori `helper` dan menghasilkan
+`ResponseEntity<ResponseDTO<T>>` dengan status serta response code yang konsisten.
 
 | Method | HTTP status | Response code |
 | --- | --- | --- |
