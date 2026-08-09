@@ -344,7 +344,13 @@ Security defaults affect every consuming service and require extra scrutiny.
 - Keep JWT authority extraction type-safe when claims are missing or malformed.
 - Roles receive the `ROLE_` prefix; test changes against `hasRole` semantics.
 - `sdk.security.permit-all-paths` uses `WebSecurityCustomizer.ignoring`, which bypasses the security
-  filter chain. Do not broaden defaults casually.
+  filter chain. A consumer-defined YAML list replaces the SDK list completely; it is not merged.
+- Treat the SDK list as a backward-compatible fallback, not a production policy. Every consumer
+  must declare a least-privilege list and must never expose business paths such as `/api/v1/**`.
+- `/internal/**` is opt-in at the consumer boundary. Include it only for services whose internal
+  endpoints are isolated from public ingress by network policy, firewall, or service mesh.
+- Do not broaden public-path defaults casually or assume that an `internal` path name provides a
+  security boundary.
 - CORS is currently permissive and enabled independently through `sdk.security.cors.enabled`.
   Tightening defaults requires migration notes; broadening them is prohibited without review.
 - `sdk.security.enabled`, method security, and CORS conditions are independent; document this when

@@ -460,6 +460,10 @@ Nama property `principle-attribute` mengikuti nama field yang saat ini tersedia 
 `sdk.security.permit-all-paths` dipasang melalui `WebSecurityCustomizer.ignoring`, sehingga path
 tersebut melewati Spring Security filter chain sepenuhnya.
 
+Jika consumer mendefinisikan `sdk.security.permit-all-paths` di YAML, Spring mengganti seluruh list
+default berikut; list consumer tidak digabungkan dengan default SDK. Karena itu consumer harus
+menuliskan semua technical endpoint yang memang ingin dibuka.
+
 Default public paths:
 
 ```text
@@ -480,8 +484,19 @@ Default public paths:
 /error
 ```
 
-Perhatian: default `/api/v1/**` membuat seluruh endpoint API v1 melewati filter security. Untuk
-production, override daftar tersebut dan sisakan hanya endpoint yang benar-benar publik.
+Daftar default dipertahankan sebagai fallback kompatibilitas. Untuk production, setiap service
+wajib melakukan override least-privilege:
+
+- Jangan masukkan `/api/v1/**`; endpoint bisnis harus melewati JWT filter dan method security.
+- Masukkan `/internal/**` hanya sebagai opt-in jika service memang mempunyai internal endpoint dan
+  aksesnya dibatasi oleh internal ingress, network policy, firewall, atau service mesh.
+- Nama path `internal` bukan mekanisme keamanan. Path tersebut tetap public terhadap setiap client
+  yang dapat mencapai port service.
+
+Implementasi saat ini pada `centralized_alert`, `audit_log`, dan `scheduler` mengganti default SDK,
+menghapus `/api/v1/**`, lalu menambahkan kembali `/internal/**` secara eksplisit untuk komunikasi
+antar-service. `usermanagement` memakai `SecurityFilterChain` sendiri, sedangkan `api_gateway`
+bersifat reactive dan tidak menggunakan security auto-configuration SDK.
 
 Jika `sdk.security.path-prefix=/orders`, SDK mendaftarkan versi prefixed dan unprefixed dari setiap
 public path. Contoh: `/actuator/**` dan `/orders/actuator/**`.
