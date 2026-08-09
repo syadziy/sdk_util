@@ -19,6 +19,8 @@ class SecurityConfigurationTest {
     void securityPropertiesResolvePrefixedPathsWithoutDuplicates() {
         SecurityProperties properties = new SecurityProperties();
         assertTrue(properties.getPermitAllPathsResolved().contains("/health"));
+        assertTrue(properties.getPermitAllPathsResolved().contains("/ws/alerts"));
+        assertFalse(properties.getPermitAllPathsResolved().contains("/api/v1/**"));
         properties.setPathPrefix(" api/// ");
         properties.setPermitAllPaths(new ArrayList<>(List.of("/health", " ", "/health")));
         assertEquals(List.of("/health", "/api/health"), properties.getPermitAllPathsResolved());

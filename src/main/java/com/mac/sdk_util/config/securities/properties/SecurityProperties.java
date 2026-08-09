@@ -37,7 +37,6 @@ public class SecurityProperties {
                             "/api-docs/**",
                             "/ws/alerts",
                             "/internal/**",
-                            "/api/v1/**",
                             "/error"));
 
     private SessionCreationPolicy sessionCreationPolicy = SessionCreationPolicy.STATELESS;
