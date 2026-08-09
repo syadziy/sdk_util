@@ -71,7 +71,7 @@ Contoh konfigurasi service yang menggunakan fitur utama:
 
 ```yaml
 sdk:
-  timezone: Asia/Jakarta
+  timezone: UTC
 
   web:
     exception-handler:
@@ -529,11 +529,11 @@ urutan resolusi:
 
 1. `sdk.timezone`
 2. `spring.jackson.time-zone`
-3. `Asia/Jakarta`
+3. `UTC`
 
 ```yaml
 sdk:
-  timezone: Asia/Jakarta
+  timezone: UTC
 ```
 
 Penggunaan:
@@ -583,7 +583,7 @@ Class ini hanya menyediakan constant; SDK tidak membangun SQL atau melakukan san
 
 | Property | Default | Scope |
 | --- | --- | --- |
-| `sdk.timezone` | empty; fallback ke Jackson/Asia Jakarta | Timezone |
+| `sdk.timezone` | empty; fallback ke Jackson/UTC | Timezone |
 | `sdk.web.exception-handler.enabled` | `true` | REST exception handler |
 | `sdk.logging.structured.enabled` | `true` | Structured logging |
 | `sdk.logging.structured.format` | `ecs` | Console/file log format |

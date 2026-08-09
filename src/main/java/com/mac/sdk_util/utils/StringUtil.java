@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class StringUtil {
 
-    public static final ZoneId DEFAULT_SOURCE_ZONE = ZoneId.of("Asia/Jakarta");
+    public static final ZoneId DEFAULT_SOURCE_ZONE = ZoneId.of("UTC");
     public static final String DEFAULT_FULL_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS";
     public static final DateTimeFormatter DEFAULT_DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 

@@ -19,7 +19,7 @@ class TimezoneAutoConfigurationTest {
         properties.setTimezone(" ");
         assertEquals(ZoneId.of("Europe/Paris"), configuration.applicationZone(properties,
                 new MockEnvironment().withProperty("spring.jackson.time-zone", " Europe/Paris ")));
-        assertEquals(ZoneId.of("Asia/Jakarta"), configuration.applicationZone(properties, new MockEnvironment()));
-        assertEquals(ZoneId.of("Asia/Jakarta"), DateUtil.getApplicationZone());
+        assertEquals(ZoneId.of("UTC"), configuration.applicationZone(properties, new MockEnvironment()));
+        assertEquals(ZoneId.of("UTC"), DateUtil.getApplicationZone());
     }
 }

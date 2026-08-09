@@ -174,6 +174,9 @@ Auto-configuration is part of the SDK's public behavior.
 Environment post-processors provide low-precedence defaults. Never overwrite a property explicitly
 configured by the consumer.
 
+UTC is the SDK and consumer runtime default. Persist and log timestamps as UTC; convert to a
+regional `ZoneId` only at an explicit presentation or business-scheduling boundary.
+
 ---
 
 ## Entity Rules
