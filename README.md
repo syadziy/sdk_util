@@ -65,6 +65,14 @@ Semua auto-configuration didaftarkan melalui
 `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports`; consumer tidak
 perlu menambahkan `@ComponentScan` untuk package `com.mac.sdk_util`.
 
+Expression `@PreAuthorize` lintas service tersedia sebagai constant pada
+`com.mac.sdk_util.entities.constant.Role`. Controller harus menggunakan constant tersebut agar nama
+authority konsisten, misalnya `@PreAuthorize(Role.AUDIT_READ)` atau
+`@PreAuthorize(Role.SCHEDULER_MANAGE)`.
+
+Response helper diimpor dari `com.mac.sdk_util.helper.ResponseHelper` dan
+`com.mac.sdk_util.helper.ResponsePagingHelper`.
+
 ## Package structure
 
 ```text

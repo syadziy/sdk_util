@@ -3,7 +3,7 @@ package com.mac.sdk_util.web;
 import com.mac.sdk_util.entities.constant.LogFields;
 import com.mac.sdk_util.entities.dto.ResponseDTO;
 import com.mac.sdk_util.exception.ResourceNotFoundException;
-import com.mac.sdk_util.utils.ResponseHelper;
+import com.mac.sdk_util.helper.ResponseHelper;
 import com.mac.sdk_util.utils.StructuredLog;
 import jakarta.validation.ConstraintViolationException;
 import java.util.List;

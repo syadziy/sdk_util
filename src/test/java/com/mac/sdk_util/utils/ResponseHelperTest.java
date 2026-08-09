@@ -1,5 +1,7 @@
 package com.mac.sdk_util.utils;
 
+import com.mac.sdk_util.helper.ResponseHelper;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 

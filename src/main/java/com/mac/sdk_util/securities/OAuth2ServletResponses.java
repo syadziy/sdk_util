@@ -2,7 +2,7 @@ package com.mac.sdk_util.securities;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mac.sdk_util.entities.dto.ResponseDTO;
-import com.mac.sdk_util.utils.ResponseHelper;
+import com.mac.sdk_util.helper.ResponseHelper;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

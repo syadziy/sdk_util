@@ -193,6 +193,8 @@ The SDK has no persistence entities. `entities/dto` contains public wire-format 
 - Do not add service-specific domain fields to shared DTOs.
 - Keep paging metadata generic.
 - Treat enum names and public constants as consumer-facing API.
+- Keep shared `@PreAuthorize` expressions in `entities/constant/Role`; consuming controllers must
+  reference these constants instead of duplicating expression strings.
 - Prefer additive changes over renaming or deleting fields/methods.
 
 ---
