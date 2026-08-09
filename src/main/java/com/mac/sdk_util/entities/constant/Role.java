@@ -22,6 +22,8 @@ public class Role {
             "hasAuthority('PERM_alert:read-recipients')";
     public static final String ALERT_MANAGE_RECIPIENTS =
             "hasAuthority('PERM_alert:manage-recipients')";
+    public static final String ALERT_READ_NOTIFICATIONS =
+            "hasAuthority('PERM_alert:read-notifications')";
 
     public static final String AUDIT_READ = "hasAuthority('PERM_audit:read')";
 

@@ -35,6 +35,7 @@ public class SecurityProperties {
                             "/swagger-ui/**",
                             "/webjars/**",
                             "/api-docs/**",
+                            "/ws/alerts",
                             "/internal/**",
                             "/api/v1/**",
                             "/error"));
